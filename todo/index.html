@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="src/jquery-3.6.0.min.js"></script>
+    <script src="src/vue.min.js"></script>
+    <title>Todo app</title>
+
+    <style>
+
+input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type=submit] {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+
+        table {
+          border-collapse: collapse;
+          border-spacing: 0;
+          width: 100%;
+          border: 1px solid #ddd;
+        }
+        
+        th, td {
+          text-align: left;
+          padding: 16px;
+        }
+        
+        tr:nth-child(even) {
+          background-color: #e6cadf54;
+        }
+        </style>
+
+</head>
+<body>
+    
+    <div class="container" style="width: 60%; margin: auto;">
+    
+        <form onsubmit="submit_todo(); return false;" autocomplete="off">
+            
+            <input type="text" id="todo_text" placeholder="What you are up to?">
+            <input type="submit" value="Submit">
+          </form>
+
+    <table id="todo_table">
+
+        <tr v-for="item in arr_todo">
+          <td>{{item.text}}</td>
+        </tr>
+
+      </table>
+
+    </div>
+
+
+    <script>
+        get_list();
+
+        
+        var model = new Vue({
+            el: '#todo_table',
+            data: {
+                arr_todo:[{text: 'todo one'}]
+            }
+
+
+        })
+
+        function get_list(){
+
+            $.get('/getList',function(data){
+            model.arr_todo = data;
+
+            })
+
+        };
+
+        function submit_todo(){
+            
+            var value = $('#todo_text').val();
+            if(!value){
+                alert('please insert your notes');
+                return;
+            }
+
+            $.post('/request', {text: value}, function(respData){
+                model.arr_todo.push({text: value});
+                $('#todo_text').val('');
+
+            })
+
+        }
+    </script>
+</body>
+</html>
