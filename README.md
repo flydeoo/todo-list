@@ -1,2 +1,2 @@
 # todo-list
-basic todo lost via nodejs
+basic todo list via nodejs
